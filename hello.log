@@ -1,0 +1,23 @@
+2018-04-30 13:10:52,766 - __main__ - INFO - Hello baby
+2018-04-30 13:11:26,256 : __main__ : INFO : Hello baby
+2018-04-30 13:23:40,323 __main__ INFO:Hello baby
+2018-04-30 13:24:13,166 __main__:INFO:Hello baby
+2018-04-30 13:24:22,434:__main__:INFO:Hello baby
+2018-04-30 13:24:39,500:__main__ INFO Hello baby
+2018-04-30 13:25:05,500  __main__  INFO: Hello baby
+2018-04-30 13:25:25,467 [ __main__ ] INFO: Hello baby
+2018-04-30 13:25:33,772 [__main__] INFO: Hello baby
+2018-04-30 13:29:02,334 __main__ [INFO]: Hello baby
+2018-04-30 13:29:17,817:__main__:[INFO]: Hello baby
+2018-04-30 13:49:56,873 __main__ [INFO]Hello baby
+2018-04-30 13:50:12,221 __main__ [INFO]: Hello baby
+2018-04-30 13:54:23,956 __main__ [INFO]: Hello baby
+2018-04-30 13:54:58,331 __main__ [INFO]: Hello baby
+2018-04-30 13:55:12,650 __main__ [INFO]: Hello baby
+2018-04-30 13:55:12,650 __main__ [INFO]: We sent the message of ['G', 'E', 'T', '_', 'T', 'E', 'M', 'P']
+2018-04-30 13:55:24,711 __main__ [INFO]: Hello baby
+2018-04-30 13:55:24,712 __main__ [INFO]: We sent the message of GET_TEMP
+2018-04-30 13:55:43,846 __main__ [INFO]: Hello baby
+2018-04-30 13:55:43,846 __main__ [INFO]: We sent the message of WAKE_UP
+2018-04-30 13:55:52,626 __main__ [INFO]: Hello baby
+2018-04-30 13:55:52,626 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
