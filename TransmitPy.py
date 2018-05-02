@@ -21,36 +21,14 @@ radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
-radio.openReadingPipe(1, pipes[0])
-radio.openWritingPipe(pipes[1])
+radio.openReadingPipe(1, pipes[1])
+radio.openWritingPipe(pipes[0])
 radio.printDetails()
 
 # radio.startListening()
-
-
-def receiveData():
-    print("Ready to receive data.")
-    radio.startListening()
-
-    while not radio.available(0):
-        time.sleep(1 / 100)
-
-    receivedMessage = []
-    radio.read(receivedMessage, radio.getDynamicPayloadSize())
-
-    print("Translating receivedMessage into unicode characters...")
-    string = ""
-    for n in receivedMessage:
-        # Decode into standard unicode set
-        if (n >= 32 and n <= 126):
-            string += chr(n)
-    print("Our slave sent us: {}:".format(string))
-    radio.stopListening()
-
+# message = list(input("Enter a message to send: "))
 while(1):
-    command = "GET_TEMP"
-    message = list(command)
-    # message = list("Hello World")
+    message = list("Hello World is awesome")
     radio.write(message)
     print("We sent the message of {}".format(message))
 
@@ -59,7 +37,6 @@ while(1):
         returnedPL = []
         radio.read(returnedPL, radio.getDynamicPayloadSize())
         print("Our returned payload was {}".format(returnedPL))
-        receiveData()
     else:
         print("No payload received")
     time.sleep(1)

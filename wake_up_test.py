@@ -2,9 +2,9 @@ import RPi.GPIO as GPIO
 from lib_nrf24 import NRF24
 import time
 import spidev
+import logging
 
 GPIO.setmode(GPIO.BCM)
-
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
 
 spi = spidev.SpiDev()
@@ -25,9 +25,6 @@ radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
 
-# radio.startListening()
-
-
 def receiveData():
     print("Ready to receive data.")
     radio.startListening()
@@ -47,10 +44,10 @@ def receiveData():
     print("Our slave sent us: {}:".format(string))
     radio.stopListening()
 
-while(1):
-    command = "GET_TEMP"
+START = 1
+while(START):
+    command = "WAKE_UP"
     message = list(command)
-    # message = list("Hello World")
     radio.write(message)
     print("We sent the message of {}".format(message))
 
@@ -60,6 +57,7 @@ while(1):
         radio.read(returnedPL, radio.getDynamicPayloadSize())
         print("Our returned payload was {}".format(returnedPL))
         receiveData()
+        START = 0
     else:
         print("No payload received")
     time.sleep(1)

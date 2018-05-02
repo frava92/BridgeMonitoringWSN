@@ -28,5 +28,12 @@ radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
+radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
+
+def _BV(x):
+    return 1 << x
+print(radio.read_register(NRF24.EN_RXADDR))
+print(_BV(NRF24.child_pipe_enable[1]))
+print(radio.read_register(NRF24.EN_RXADDR) | _BV(NRF24.child_pipe_enable[1]))
