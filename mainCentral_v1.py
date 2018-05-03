@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 # create a file handler
-handler = logging.FileHandler('hello.log')
+handler = logging.FileHandler('mainCentral_v1.log')
 handler.setLevel(logging.INFO)
 
 # create a logging format
@@ -39,40 +39,22 @@ handler.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(handler)
 
-
-def receiveData():
-    logger.info("Ready to receive data.")
-    radio.startListening()
-
-    while not radio.available(0):
-        time.sleep(1 / 100)
-
-    receivedMessage = []
-    radio.read(receivedMessage, radio.getDynamicPayloadSize())
-
-    logger.info("Translating receivedMessage into unicode characters...")
-    string = ""
-    for n in receivedMessage:
-        # Decode into standard unicode set
-        if (n >= 32 and n <= 126):
-            string += chr(n)
-    logger.info("Our slave sent us: {}:".format(string))
-    radio.stopListening()
-
 START = 1
+
+
 while(START):
-    command = "WAKE_UP"
+    command = "GET_DATA"
     message = list(command)
     radio.write(message)
-    logger.info("We sent the message of {}".format(message))
+    logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
     # Check if it returned ackPL
     if radio.isAckPayloadAvailable():
         returnedPL = []
         radio.read(returnedPL, radio.getDynamicPayloadSize())
-        logger.info("Our returned payload was {}".format(returnedPL))
+        logger.info("Los datos recibidos son: {} ".format(returnedPL))
         receiveData()
         START = 0
     else:
-        logger.info("No payload received")
-    time.sleep(1)
+        logger.error("No se recibieron datos")
+    time.sleep(1/33)

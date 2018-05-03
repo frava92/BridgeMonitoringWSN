@@ -29,7 +29,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 # create a file handler
-handler = logging.FileHandler('hello.log')
+handler = logging.FileHandler('mainSensor_v1.log')
 handler.setLevel(logging.INFO)
 
 # create a logging format
@@ -39,40 +39,52 @@ handler.setFormatter(formatter)
 # add the handlers to the logger
 logger.addHandler(handler)
 
-
-def receiveData():
-    logger.info("Ready to receive data.")
+START = 1
+waitingRX_Counter = 0
+def getData():
+    temp = 25
+    return str(temp)
+    
+def sendData(ID, value):
+    radio.stopListening()
+    time.sleep(0.25)
+    message = list(ID) + list(value)
+    print("About to send message.")
+    radio.write(message)
+    print("Sent the data")
     radio.startListening()
 
+while(START):
+    ackPL = [1]
+    radio.writeAckPayload(1, ackPL, len(ackPL))
     while not radio.available(0):
-        time.sleep(1 / 100)
-
+		waitingRX_Counter = waitingRX_Counter + 1
+		if waitingRX_Counter == 100:
+			logger.error("Solicitud no recibida")
+			waitingRX_Counter = 0
+		time.sleep(1 / 100)
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
+    logger_info("Recibido: {}".format(receivedMessage))
 
-    logger.info("Translating receivedMessage into unicode characters...")
+    logger.info("Translating the receivedMessage into unicode characters")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    logger.info("Our slave sent us: {}:".format(string))
-    radio.stopListening()
+    print(string)
 
-START = 1
-while(START):
-    command = "WAKE_UP"
-    message = list(command)
-    radio.write(message)
-    logger.info("We sent the message of {}".format(message))
+    # We want to react to the command from the master.
+    command = string
+    if command == "GET_DATA":
+        logger.info("Solicitud de datos recibida")
+        tempID = "temp_"
+        temp = getData()
+        sendData(tempID, temp)
+        #START = 0
+    command = ""
 
-    # Check if it returned ackPL
-    if radio.isAckPayloadAvailable():
-        returnedPL = []
-        radio.read(returnedPL, radio.getDynamicPayloadSize())
-        logger.info("Our returned payload was {}".format(returnedPL))
-        receiveData()
-        START = 0
-    else:
-        logger.info("No payload received")
+    radio.writeAckPayload(1, ackPL, len(ackPL))
+    logger.info("Loaded payload reply of {}".format(ackPL))
     time.sleep(1)

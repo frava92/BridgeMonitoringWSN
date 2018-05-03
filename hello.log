@@ -21,3 +21,45 @@
 2018-04-30 13:55:43,846 __main__ [INFO]: We sent the message of WAKE_UP
 2018-04-30 13:55:52,626 __main__ [INFO]: Hello baby
 2018-04-30 13:55:52,626 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:08:45,350 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:08:45,351 __main__ [INFO]: No payload received
+2018-05-02 16:08:46,407 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:08:46,408 __main__ [INFO]: No payload received
+2018-05-02 16:08:47,464 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:08:47,465 __main__ [INFO]: No payload received
+2018-05-02 16:08:48,520 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:08:48,521 __main__ [INFO]: No payload received
+2018-05-02 16:08:49,577 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:08:49,578 __main__ [INFO]: No payload received
+2018-05-02 16:09:13,847 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:13,848 __main__ [INFO]: No payload received
+2018-05-02 16:09:14,904 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:14,905 __main__ [INFO]: No payload received
+2018-05-02 16:09:15,961 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:15,961 __main__ [INFO]: No payload received
+2018-05-02 16:09:17,017 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:17,018 __main__ [INFO]: No payload received
+2018-05-02 16:09:18,074 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:18,075 __main__ [INFO]: No payload received
+2018-05-02 16:09:19,131 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:19,132 __main__ [INFO]: No payload received
+2018-05-02 16:09:20,188 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:20,188 __main__ [INFO]: No payload received
+2018-05-02 16:09:21,244 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:21,245 __main__ [INFO]: No payload received
+2018-05-02 16:09:22,301 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:22,302 __main__ [INFO]: No payload received
+2018-05-02 16:09:23,347 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:23,347 __main__ [INFO]: No payload received
+2018-05-02 16:09:24,403 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:24,404 __main__ [INFO]: No payload received
+2018-05-02 16:09:25,461 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:25,462 __main__ [INFO]: No payload received
+2018-05-02 16:09:26,518 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:26,519 __main__ [INFO]: No payload received
+2018-05-02 16:09:27,575 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:27,576 __main__ [INFO]: No payload received
+2018-05-02 16:09:28,632 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:28,633 __main__ [INFO]: No payload received
+2018-05-02 16:09:29,690 __main__ [INFO]: We sent the message of ['W', 'A', 'K', 'E', '_', 'U', 'P']
+2018-05-02 16:09:29,691 __main__ [INFO]: No payload received
