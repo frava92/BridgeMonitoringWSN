@@ -3,6 +3,9 @@ from lib_nrf24 import NRF24
 import time
 import spidev
 import logging
+###########################################
+##               Init Sequence           ##
+###########################################
 
 GPIO.setmode(GPIO.BCM)
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
@@ -25,6 +28,10 @@ radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
 
+#############################################
+##           Configure log files           ##
+#############################################
+
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
@@ -40,6 +47,17 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 START = 1
+
+#############################################
+##           Configure Network             ##
+#############################################
+
+while(START):
+	command = "HEY_LISTEN"
+	message = list(command)
+	logger.info("Iniciando configuración de la red")
+	radio.write(message)
+	logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
 
 while(START):
