@@ -2,6 +2,7 @@ import RPi.GPIO as GPIO
 from lib_nrf24 import NRF24
 import time
 import spidev
+import Adafruit_ADS1x15
 
 GPIO.setmode(GPIO.BCM)
 
@@ -30,10 +31,14 @@ radio.printDetails()
 
 radio.startListening()
 
+adc_input = Adafruit_ADS1x15.ADS1115()
+GAIN = 1
+
+
 
 def getTemp():
-    temp = 25
-    return str(temp)
+    flex = adc_input.read_adc_difference(0, gain=GAIN)
+    return str(flex)
 
 
 def sendData(ID, value):
@@ -64,12 +69,12 @@ while(START):
 
     # We want tp react to the command from the master.
     command = string
-    if command == "WAKE_UP":
+    if command == "GET_TEMP":
         print("We should get the temperature!")
         tempID = "temp_"
         temp = getTemp()
         sendData(tempID, temp)
-        START = 0
+        #START = 0
     command = ""
 
     radio.writeAckPayload(1, ackPL, len(ackPL))
