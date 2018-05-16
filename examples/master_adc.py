@@ -36,8 +36,8 @@ def receiveData():
         time.sleep(1 / 100)
 
     receivedMessage = []
-    radio.read(receivedMessage, radio.getDynamicPayloadSize())
-
+    radio.read(receivedMessage, (radio.getDynamicPayloadSize()+2))
+    print("Received: {}".format(receivedMessage))
     print("Translating receivedMessage into unicode characters...")
     string = ""
     for n in receivedMessage:
@@ -62,4 +62,4 @@ while(1):
         receiveData()
     else:
         print("No payload received")
-    time.sleep(1)
+    time.sleep(5)
