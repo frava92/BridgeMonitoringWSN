@@ -3,7 +3,11 @@ from lib_nrf24 import NRF24
 import time
 import spidev
 import logging
+import Adafruit_ADS1x15
 
+###########################################
+##               Init Sequence           ##
+###########################################
 GPIO.setmode(GPIO.BCM)
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
 
@@ -25,11 +29,16 @@ radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
 
+adc_input = Adafruit_ADS1x15.ADS1115()
+GAIN = 1
+#############################################
+##           Configure log files           ##
+#############################################
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 # create a file handler
-handler = logging.FileHandler('mainSensor_v1.log')
+handler = logging.FileHandler('./logs/mainSensor_v1.log')
 handler.setLevel(logging.INFO)
 
 # create a logging format
@@ -41,10 +50,18 @@ logger.addHandler(handler)
 
 START = 1
 waitingRX_Counter = 0
+#############################################
+##           Configure Network             ##
+#############################################
+
+
+#############################################
+##               Program Start             ##
+#############################################
 def getData():
-    temp = 25
-    return str(temp)
-    
+    flex = adc_input.read_adc_difference(0, gain=GAIN)
+    return str(flex)
+
 def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
@@ -67,21 +84,21 @@ while(START):
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
     logger_info("Recibido: {}".format(receivedMessage))
 
-    logger.info("Translating the receivedMessage into unicode characters")
+    logger.info("Traduciendo el mensajeRecibido")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    print(string)
+    logger_info(string)
 
     # We want to react to the command from the master.
     command = string
     if command == "GET_DATA":
         logger.info("Solicitud de datos recibida")
-        tempID = "temp_"
-        temp = getData()
-        sendData(tempID, temp)
+        flexID = "flex_"
+        flex = getData()
+        sendData(flexID, flex)
         #START = 0
     command = ""
 

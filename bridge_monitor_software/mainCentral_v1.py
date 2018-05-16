@@ -3,6 +3,7 @@ from lib_nrf24 import NRF24
 import time
 import spidev
 import logging
+import csv
 ###########################################
 ##               Init Sequence           ##
 ###########################################
@@ -28,6 +29,8 @@ radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
 
+with open('./reportes/test.csv', 'wb') as csvfile:
+	csvwriter = csv.writer(csvfile, delimiter=',')
 #############################################
 ##           Configure log files           ##
 #############################################
