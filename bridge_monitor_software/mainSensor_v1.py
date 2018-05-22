@@ -73,7 +73,7 @@ def readSensor():
 def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
-    message = list(ID) + list(value)
+    message = ID + list(value)
     print("Iniciando envio de datos.")
     radio.write(message)
     print("Datos enviados")
