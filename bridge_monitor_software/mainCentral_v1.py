@@ -55,13 +55,31 @@ START = 1
 ##           Configure Network             ##
 #############################################
 
-while(START):
-	command = "HEY_LISTEN"
-	message = list(command)
-	logger.info("Iniciando configuración de la red")
-	radio.write(message)
-	logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
+#while(START):
+#	command = "HEY_LISTEN"
+#	message = list(command)
+#	logger.info("Iniciando configuración de la red")
+#	radio.write(message)
+#	logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
+def receiveData():
+    print("Ready to receive data.")
+    radio.startListening()
+
+    while not radio.available(0):
+        time.sleep(1 / 100)
+
+    receivedMessage = []
+    radio.read(receivedMessage, (radio.getDynamicPayloadSize()+2))
+    print("Received: {}".format(receivedMessage))
+    print("Translating receivedMessage into unicode characters...")
+    string = ""
+    for n in receivedMessage:
+        # Decode into standard unicode set
+        if (n >= 32 and n <= 126):
+            string += chr(n)
+    print("Our slave sent us: {}:".format(string))
+    radio.stopListening()
 
 while(START):
     command = "GET_DATA"
@@ -75,7 +93,7 @@ while(START):
         radio.read(returnedPL, radio.getDynamicPayloadSize())
         logger.info("Los datos recibidos son: {} ".format(returnedPL))
         receiveData()
-        START = 0
+        #START = 0
     else:
         logger.error("No se recibieron datos")
     time.sleep(1/33)

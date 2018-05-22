@@ -8,6 +8,8 @@ import Adafruit_ADS1x15
 ###########################################
 ##               Init Sequence           ##
 ###########################################
+
+############### Radio Setup ###############
 GPIO.setmode(GPIO.BCM)
 pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
 
@@ -29,8 +31,12 @@ radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
 
+receiver_ID = 1_
+
+################# ADC Setup #################
 adc_input = Adafruit_ADS1x15.ADS1115()
 GAIN = 1
+
 #############################################
 ##           Configure log files           ##
 #############################################
@@ -49,7 +55,7 @@ handler.setFormatter(formatter)
 logger.addHandler(handler)
 
 START = 1
-waitingRX_Counter = 0
+waitingREQ_Counter = 0
 #############################################
 ##           Configure Network             ##
 #############################################
@@ -58,7 +64,7 @@ waitingRX_Counter = 0
 #############################################
 ##               Program Start             ##
 #############################################
-def getData():
+def readSensor():
     flex = adc_input.read_adc_difference(0, gain=GAIN)
     return str(flex)
 
@@ -66,42 +72,42 @@ def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
     message = list(ID) + list(value)
-    print("About to send message.")
+    logger.info("Iniciando envio de datos.")
     radio.write(message)
-    print("Sent the data")
+    logger.info("Datos enviados")
     radio.startListening()
 
 while(START):
     ackPL = [1]
     radio.writeAckPayload(1, ackPL, len(ackPL))
     while not radio.available(0):
-		waitingRX_Counter = waitingRX_Counter + 1
-		if waitingRX_Counter == 100:
+		waitingREQ_Counter = waitingREQ_Counter + 1
+		if waitingREQ_Counter == 100:
 			logger.error("Solicitud no recibida")
-			waitingRX_Counter = 0
+			waitingREQ_Counter = 0
 		time.sleep(1 / 100)
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
-    logger_info("Recibido: {}".format(receivedMessage))
-
+    logger.info("Recibido: {}".format(receivedMessage))
     logger.info("Traduciendo el mensajeRecibido")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    logger_info(string)
+    logger.info(string)
 
     # We want to react to the command from the master.
     command = string
     if command == "GET_DATA":
         logger.info("Solicitud de datos recibida")
-        flexID = "flex_"
         flex = getData()
-        sendData(flexID, flex)
-        #START = 0
+        sendData(receiver_ID), flex)
+    elif command == "HEY_LISTEN"
+        logger.info("")
+        sendData(receiver_ID,)
     command = ""
 
     radio.writeAckPayload(1, ackPL, len(ackPL))
     logger.info("Loaded payload reply of {}".format(ackPL))
-    time.sleep(1)
+    #time.sleep(1)
