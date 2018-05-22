@@ -73,7 +73,7 @@ def readSensor():
 def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
-    message = list(ID) + list(value)
+    message = ID + list(value)
     print("Iniciando envio de datos.")
     radio.write(message)
     print("Datos enviados")
@@ -103,7 +103,7 @@ while(START):
     command = string
     if command == "GET_DATA":
         print("Solicitud de datos recibida")
-        flex = getData()
+        flex = readSensor()
         sendData(receiver_ID, flex)
     elif command == "HEY_LISTEN":
         print("")
