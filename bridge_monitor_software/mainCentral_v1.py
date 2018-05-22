@@ -55,13 +55,6 @@ START = 1
 ##           Configure Network             ##
 #############################################
 
-#while(START):
-#	command = "HEY_LISTEN"
-#	message = list(command)
-#	logger.info("Iniciando configuración de la red")
-#	radio.write(message)
-#	logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
-
 def receiveData():
     print("Ready to receive data.")
     radio.startListening()
