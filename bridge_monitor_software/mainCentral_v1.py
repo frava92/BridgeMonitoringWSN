@@ -27,6 +27,9 @@ radio.enableAckPayload()
 
 radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
+radio.write_register(NRF24.EN_RXADDR, 0x07)
+radio.write_register(NRF24.RF_SETUP, 0x08)
+radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 
 with open('./reportes/test.csv', 'wb') as csvfile:
@@ -39,7 +42,7 @@ logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)
 
 # create a file handler
-handler = logging.FileHandler('mainCentral_v1.log')
+handler = logging.FileHandler('./logs/mainCentral_v1.log')
 handler.setLevel(logging.INFO)
 
 # create a logging format
@@ -78,15 +81,15 @@ while(START):
     command = "GET_DATA"
     message = list(command)
     radio.write(message)
-    logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
+    print("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
     # Check if it returned ackPL
     if radio.isAckPayloadAvailable():
         returnedPL = []
         radio.read(returnedPL, radio.getDynamicPayloadSize())
-        logger.info("Los datos recibidos son: {} ".format(returnedPL))
+        print("Los datos recibidos son: {} ".format(returnedPL))
         receiveData()
         #START = 0
     else:
-        logger.error("No se recibieron datos")
+        print("No se recibieron datos")
     time.sleep(1/33)

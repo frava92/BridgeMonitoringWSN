@@ -27,10 +27,12 @@ radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
-radio.openReadingPipe(1, pipes[0])
-radio.openWritingPipe(pipes[1])
+radio.openWritingPipe(pipes[0])
+radio.openReadingPipe(1, pipes[1])
+radio.write_register(NRF24.EN_RXADDR, 0x07)
+radio.write_register(NRF24.RF_SETUP, 0x08)
+radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
-
 receiver_ID = 1_
 
 ################# ADC Setup #################
@@ -72,9 +74,9 @@ def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
     message = list(ID) + list(value)
-    logger.info("Iniciando envio de datos.")
+    print("Iniciando envio de datos.")
     radio.write(message)
-    logger.info("Datos enviados")
+    print("Datos enviados")
     radio.startListening()
 
 while(START):
@@ -83,31 +85,31 @@ while(START):
     while not radio.available(0):
 		waitingREQ_Counter = waitingREQ_Counter + 1
 		if waitingREQ_Counter == 100:
-			logger.error("Solicitud no recibida")
+			print("Solicitud no recibida")
 			waitingREQ_Counter = 0
 		time.sleep(1 / 100)
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
-    logger.info("Recibido: {}".format(receivedMessage))
-    logger.info("Traduciendo el mensajeRecibido")
+    print("Recibido: {}".format(receivedMessage))
+    print("Traduciendo el mensajeRecibido")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    logger.info(string)
+    print(string)
 
     # We want to react to the command from the master.
     command = string
     if command == "GET_DATA":
-        logger.info("Solicitud de datos recibida")
+        print("Solicitud de datos recibida")
         flex = getData()
-        sendData(receiver_ID), flex)
-    elif command == "HEY_LISTEN"
-        logger.info("")
+        sendData(receiver_ID, flex)
+    elif command == "HEY_LISTEN":
+        print("")
         sendData(receiver_ID,)
     command = ""
 
     radio.writeAckPayload(1, ackPL, len(ackPL))
-    logger.info("Loaded payload reply of {}".format(ackPL))
+    print("Loaded payload reply of {}".format(ackPL))
     #time.sleep(1)
