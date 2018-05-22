@@ -33,7 +33,7 @@ radio.write_register(NRF24.EN_RXADDR, 0x07)
 radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
-receiver_ID = 1_
+receiver_ID = 1
 
 ################# ADC Setup #################
 adc_input = Adafruit_ADS1x15.ADS1115()
