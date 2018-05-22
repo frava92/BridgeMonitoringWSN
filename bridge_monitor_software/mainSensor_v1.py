@@ -33,7 +33,7 @@ radio.write_register(NRF24.EN_RXADDR, 0x07)
 radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
-receiver_ID = 1
+receiver_ID = "1"
 
 ################# ADC Setup #################
 adc_input = Adafruit_ADS1x15.ADS1115()
@@ -73,7 +73,7 @@ def readSensor():
 def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
-    message = ID + list(value)
+    message = list(ID) + list(value)
     print("Iniciando envio de datos.")
     radio.write(message)
     print("Datos enviados")
