@@ -12,4 +12,4 @@ sudo python3 setup.py install # python3
 cd ~/Desktop
 mkdir NRF24L01
 cd NRF24L01
-git clone https://github.com/frava92/BridgeMonitoringWSN.git
+git clone -b Development https://github.com/frava92/BridgeMonitoringWSN.git
