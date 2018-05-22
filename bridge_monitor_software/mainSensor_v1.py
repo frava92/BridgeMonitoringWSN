@@ -33,7 +33,7 @@ radio.write_register(NRF24.EN_RXADDR, 0x07)
 radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
-receiver_ID = 1_
+receiver_ID = "1"
 
 ################# ADC Setup #################
 adc_input = Adafruit_ADS1x15.ADS1115()
@@ -83,10 +83,10 @@ while(START):
     ackPL = [1]
     radio.writeAckPayload(1, ackPL, len(ackPL))
     while not radio.available(0):
-		waitingREQ_Counter = waitingREQ_Counter + 1
-		if waitingREQ_Counter == 100:
-			print("Solicitud no recibida")
-			waitingREQ_Counter = 0
+		#waitingREQ_Counter = waitingREQ_Counter + 1
+		#if waitingREQ_Counter == 100:
+			#print("Solicitud no recibida")
+			#waitingREQ_Counter = 0
 		time.sleep(1 / 100)
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
@@ -103,7 +103,7 @@ while(START):
     command = string
     if command == "GET_DATA":
         print("Solicitud de datos recibida")
-        flex = getData()
+        flex = readSensor()
         sendData(receiver_ID, flex)
     elif command == "HEY_LISTEN":
         print("")
