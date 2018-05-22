@@ -83,10 +83,10 @@ while(START):
     ackPL = [1]
     radio.writeAckPayload(1, ackPL, len(ackPL))
     while not radio.available(0):
-		waitingREQ_Counter = waitingREQ_Counter + 1
-		if waitingREQ_Counter == 100:
-			print("Solicitud no recibida")
-			waitingREQ_Counter = 0
+		#waitingREQ_Counter = waitingREQ_Counter + 1
+		#if waitingREQ_Counter == 100:
+			#print("Solicitud no recibida")
+			#waitingREQ_Counter = 0
 		time.sleep(1 / 100)
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
