@@ -103,7 +103,7 @@ while(START):
     command = string
     if command == "GET_DATA":
         print("Solicitud de datos recibida")
-        flex = getData()
+        flex = readSensor()
         sendData(receiver_ID, flex)
     elif command == "HEY_LISTEN":
         print("")
