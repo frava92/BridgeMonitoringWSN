@@ -4,11 +4,9 @@ import time
 import spidev
 import logging
 import csv
-from pathlib import Path
+import os
 from datetime import datetime
 from time import sleep, strftime, time
-
-
 
 
 ###########################################
@@ -22,7 +20,7 @@ spi = spidev.SpiDev()
 
 radio = NRF24(GPIO, spi)
 radio.begin(0, 17)
-spi.max_speed_hz = 7529
+spi.max_speed_hz = 1500000
 radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
@@ -39,11 +37,8 @@ radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 
-<<<<<<< HEAD
 reportes_path = './reportes/'
 csvfile_path = reportes_path + str(datetime.now().date()) + '.csv'
-=======
->>>>>>> 96d5ee141f991a610937bfd3ecff2003ea22e808
 #############################################
 ##           Configure log files           ##
 #############################################
@@ -76,7 +71,7 @@ def receiveData():
         sleep(1 / 100)
 
     receivedMessage = []
-    radio.read(receivedMessage, (radio.getDynamicPayloadSize()+2))
+    radio.read(receivedMessage, radio.getDynamicPayloadSize())
     print("Received: {}".format(receivedMessage))
     print("Translating receivedMessage into unicode characters...")
     string = ""
@@ -87,17 +82,17 @@ def receiveData():
     print("Our slave sent us: {}:".format(string))
     return string
     radio.stopListening()
-
-<<<<<<< HEAD
+    
+if (os.path.isfile(str(csvfile_path))):
+	exists_flag = 1
+	print("El archivo ya existe!")
+else:
+	exists_flag = 0
+	print("Archivo inexistente")
+	
 with open(csvfile_path, 'a') as csvfile:
-	if (os.path.exists(csvfile) == False):
-        csvfile.write("timestamp,sensor1\n")
-=======
-my_report = Path("./reportes/test2.csv")
-with open('./reportes/test2.csv', 'a') as csvfile:
-	if (os.path.isfile(csvfile) == False):
+	if (exists_flag == 0):
 		csvfile.write("timestamp,sensor1\n")
->>>>>>> 96d5ee141f991a610937bfd3ecff2003ea22e808
 	while(START):
 		command = "GET_DATA"
 		message = list(command)

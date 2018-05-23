@@ -17,7 +17,7 @@ spi = spidev.SpiDev()
 
 radio = NRF24(GPIO, spi)
 radio.begin(0, 17)
-spi.max_speed_hz = 7529
+spi.max_speed_hz = 1500000
 radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
