@@ -4,6 +4,9 @@ import time
 import spidev
 import logging
 import csv
+import os
+from datetime import datetime
+
 ###########################################
 ##               Init Sequence           ##
 ###########################################
@@ -32,8 +35,9 @@ radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 
-with open('./reportes/test.csv', 'wb') as csvfile:
-	csvwriter = csv.writer(csvfile, delimiter=',')
+csvfile = open('./reportes/test.csv', 'a')
+if os.stat("./reportes/test.csv.csv").st_size == 0:
+        file.write("Time,Sensor1\n")
 #############################################
 ##           Configure log files           ##
 #############################################
@@ -75,6 +79,7 @@ def receiveData():
         if (n >= 32 and n <= 126):
             string += chr(n)
     print("Our slave sent us: {}:".format(string))
+	return string
     radio.stopListening()
 
 while(START):
@@ -88,7 +93,8 @@ while(START):
         returnedPL = []
         radio.read(returnedPL, radio.getDynamicPayloadSize())
         print("Los datos recibidos son: {} ".format(returnedPL))
-        receiveData()
+        message = receiveData()
+		file.write(str(datetime.now)+","+str(string))
         #START = 0
     else:
         print("No se recibieron datos")
