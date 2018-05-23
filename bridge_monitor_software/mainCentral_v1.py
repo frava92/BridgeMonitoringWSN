@@ -4,8 +4,10 @@ import time
 import spidev
 import logging
 import csv
-import os
+from pathlib import Path
 from datetime import datetime
+from time import sleep, strftime, time
+
 
 
 
@@ -37,8 +39,11 @@ radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 
+<<<<<<< HEAD
 reportes_path = './reportes/'
 csvfile_path = reportes_path + str(datetime.now().date()) + '.csv'
+=======
+>>>>>>> 96d5ee141f991a610937bfd3ecff2003ea22e808
 #############################################
 ##           Configure log files           ##
 #############################################
@@ -83,9 +88,16 @@ def receiveData():
     return string
     radio.stopListening()
 
+<<<<<<< HEAD
 with open(csvfile_path, 'a') as csvfile:
 	if (os.path.exists(csvfile) == False):
         csvfile.write("timestamp,sensor1\n")
+=======
+my_report = Path("./reportes/test2.csv")
+with open('./reportes/test2.csv', 'a') as csvfile:
+	if (os.path.isfile(csvfile) == False):
+		csvfile.write("timestamp,sensor1\n")
+>>>>>>> 96d5ee141f991a610937bfd3ecff2003ea22e808
 	while(START):
 		command = "GET_DATA"
 		message = list(command)
