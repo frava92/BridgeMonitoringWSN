@@ -4,8 +4,12 @@ import time
 import spidev
 import logging
 import csv
-import os
+from pathlib import Path
 from datetime import datetime
+from time import sleep, strftime, time
+
+
+
 
 ###########################################
 ##               Init Sequence           ##
@@ -35,9 +39,11 @@ radio.write_register(NRF24.RF_SETUP, 0x08)
 radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 
-csvfile = open('./reportes/test.csv', 'a')
-if os.stat("./reportes/test.csv.csv").st_size == 0:
-        file.write("Time,Sensor1\n")
+<<<<<<< HEAD
+reportes_path = './reportes/'
+csvfile_path = reportes_path + str(datetime.now().date()) + '.csv'
+=======
+>>>>>>> 96d5ee141f991a610937bfd3ecff2003ea22e808
 #############################################
 ##           Configure log files           ##
 #############################################
@@ -67,7 +73,7 @@ def receiveData():
     radio.startListening()
 
     while not radio.available(0):
-        time.sleep(1 / 100)
+        sleep(1 / 100)
 
     receivedMessage = []
     radio.read(receivedMessage, (radio.getDynamicPayloadSize()+2))
@@ -79,23 +85,33 @@ def receiveData():
         if (n >= 32 and n <= 126):
             string += chr(n)
     print("Our slave sent us: {}:".format(string))
-	return string
+    return string
     radio.stopListening()
 
-while(START):
-    command = "GET_DATA"
-    message = list(command)
-    radio.write(message)
-    print("El mensaje enviado fue {} ".format(command) + "{}".format(message))
+<<<<<<< HEAD
+with open(csvfile_path, 'a') as csvfile:
+	if (os.path.exists(csvfile) == False):
+        csvfile.write("timestamp,sensor1\n")
+=======
+my_report = Path("./reportes/test2.csv")
+with open('./reportes/test2.csv', 'a') as csvfile:
+	if (os.path.isfile(csvfile) == False):
+		csvfile.write("timestamp,sensor1\n")
+>>>>>>> 96d5ee141f991a610937bfd3ecff2003ea22e808
+	while(START):
+		command = "GET_DATA"
+		message = list(command)
+		radio.write(message)
+		print("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
-    # Check if it returned ackPL
-    if radio.isAckPayloadAvailable():
-        returnedPL = []
-        radio.read(returnedPL, radio.getDynamicPayloadSize())
-        print("Los datos recibidos son: {} ".format(returnedPL))
-        message = receiveData()
-		file.write(str(datetime.now)+","+str(string))
-        #START = 0
-    else:
-        print("No se recibieron datos")
-    time.sleep(1/33)
+		# Check if it returned ackPL
+		if radio.isAckPayloadAvailable():
+			returnedPL = []
+			radio.read(returnedPL, radio.getDynamicPayloadSize())
+			print("Los datos recibidos son: {} ".format(returnedPL))
+			message = receiveData()
+			csvfile.write("{0},{1}\n".format(strftime("%Y-%m-%d %H:%M:%S"),str(message)))
+			#START = 0
+		else:
+			print("No se recibieron datos")
+		sleep(1/33)
