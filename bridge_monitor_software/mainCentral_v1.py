@@ -20,7 +20,7 @@ spi = spidev.SpiDev()
 
 radio = NRF24(GPIO, spi)
 radio.begin(0, 17)
-spi.max_speed_hz = 1500000
+spi.max_speed_hz = 15000000
 radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
@@ -61,7 +61,7 @@ START = 1
 #############################################
 
 def receiveData():
-    print("Ready to receive data.")
+    logger.info("Listo para recibir datos")
     radio.startListening()
 
     while not radio.available(0):
@@ -69,24 +69,25 @@ def receiveData():
 
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
-    print("Received: {}".format(receivedMessage))
-    print("Translating receivedMessage into unicode characters...")
+    logger.info("Recibido: {}".format(receivedMessage))
+    logger.info("Traduciendo el mensaje recibido...")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    print("Our slave sent us: {}:".format(string))
+    logger.info("El sensor envia: {}:".format(string))
     return string
     radio.stopListening()
-    
+
 if (os.path.isfile(str(csvfile_path))):
 	exists_flag = 1
-	print("El archivo ya existe!")
+	logger.warning("El archivo ya existe!")
 else:
 	exists_flag = 0
-	print("Archivo inexistente")
-	
+	logger.warning("Archivo inexistente!")
+    logger.info("Creando archivo nuevo")
+
 with open(csvfile_path, 'a') as csvfile:
 	if (exists_flag == 0):
 		csvfile.write("timestamp,sensor1\n")
@@ -94,16 +95,16 @@ with open(csvfile_path, 'a') as csvfile:
 		command = "GET_DATA"
 		message = list(command)
 		radio.write(message)
-		print("El mensaje enviado fue {} ".format(command) + "{}".format(message))
+		logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
 		# Check if it returned ackPL
 		if radio.isAckPayloadAvailable():
 			returnedPL = []
 			radio.read(returnedPL, radio.getDynamicPayloadSize())
-			print("Los datos recibidos son: {} ".format(returnedPL))
+			logger.info("Los datos recibidos son: {} ".format(returnedPL))
 			message = receiveData()
 			csvfile.write("{0},{1}\n".format(str(datetime.now()),str(message)))
 			#START = 0
 		else:
-			print("No se recibieron datos")
-		sleep(1/33)
+			logger.error("No se recibieron datos")
+		sleep(1/10)
