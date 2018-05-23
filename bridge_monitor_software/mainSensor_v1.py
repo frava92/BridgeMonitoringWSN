@@ -22,18 +22,16 @@ radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
 radio.setDataRate(NRF24.BR_2MBPS)
-radio.setPALevel(NRF24.PA_MIN)
+radio.setPALevel(NRF24.PA_MAX)
 radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
 radio.openWritingPipe(pipes[0])
 radio.openReadingPipe(1, pipes[1])
-radio.write_register(NRF24.EN_RXADDR, 0x07)
-radio.write_register(NRF24.RF_SETUP, 0x08)
-radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 radio.startListening()
+
 receiver_ID = "1_"
 
 ################# ADC Setup #################

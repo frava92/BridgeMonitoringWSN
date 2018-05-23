@@ -25,16 +25,13 @@ radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
 radio.setDataRate(NRF24.BR_2MBPS)
-radio.setPALevel(NRF24.PA_MIN)
+radio.setPALevel(NRF24.PA_MAX)
 radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
 radio.openReadingPipe(1, pipes[0])
 radio.openWritingPipe(pipes[1])
-radio.write_register(NRF24.EN_RXADDR, 0x07)
-radio.write_register(NRF24.RF_SETUP, 0x08)
-radio.write_register(NRF24.FEATURE, 0x06)
 radio.printDetails()
 
 reportes_path = './reportes/'
@@ -105,7 +102,7 @@ with open(csvfile_path, 'a') as csvfile:
 			radio.read(returnedPL, radio.getDynamicPayloadSize())
 			print("Los datos recibidos son: {} ".format(returnedPL))
 			message = receiveData()
-			csvfile.write("{0},{1}\n".format(strftime("%Y-%m-%d %H:%M:%S"),str(message)))
+			csvfile.write("{0},{1}\n".format(str(datetime.now()),str(message)))
 			#START = 0
 		else:
 			print("No se recibieron datos")
