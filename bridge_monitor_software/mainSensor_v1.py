@@ -17,7 +17,7 @@ spi = spidev.SpiDev()
 
 radio = NRF24(GPIO, spi)
 radio.begin(0, 17)
-spi.max_speed_hz = 1500000
+spi.max_speed_hz = 15000000
 radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
@@ -73,9 +73,9 @@ def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
     message = list(ID) + list(value)
-    print("Iniciando envio de datos.")
+    logger.info("Iniciando envio de datos.")
     radio.write(message)
-    print("Datos enviados")
+    logger.info("Datos enviados")
     radio.startListening()
 
 while(START):
@@ -83,32 +83,32 @@ while(START):
     radio.writeAckPayload(1, ackPL, len(ackPL))
     while not radio.available(0):
 		waitingREQ_Counter = waitingREQ_Counter + 1
-		if waitingREQ_Counter == 100:
-			print("Solicitud no recibida")
+		if waitingREQ_Counter == 500:
+			logger.error("Solicitud no recibida")
 			waitingREQ_Counter = 0
 		time.sleep(1 / 100)
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
-    print("Recibido: {}".format(receivedMessage))
-    print("Traduciendo el mensajeRecibido")
+    logger.info("Recibido: {}".format(receivedMessage))
+    logger.info("Traduciendo el mensaje recibido...")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    print(string)
+    logger.info(string)
 
     # We want to react to the command from the master.
     command = string
     if command == "GET_DATA":
-        print("Solicitud de datos recibida")
+        logger.info("Solicitud de datos recibida")
         flex = readSensor()
         sendData(receiver_ID, flex)
     elif command == "HEY_LISTEN":
-        print("")
+        logger.info("")
         sendData(receiver_ID,)
     command = ""
 
     radio.writeAckPayload(1, ackPL, len(ackPL))
-    print("Loaded payload reply of {}".format(ackPL))
+    logger.info("Cargando respuesta de {}".format(ackPL))
     #time.sleep(1)
