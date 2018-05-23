@@ -14,13 +14,13 @@ from time import sleep, strftime, time
 ###########################################
 
 GPIO.setmode(GPIO.BCM)
-pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
+pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2], [0xC3], [0xC4], [0xC5], [0xC6]]
 
 spi = spidev.SpiDev()
 
 radio = NRF24(GPIO, spi)
 radio.begin(0, 17)
-spi.max_speed_hz = 1500000
+spi.max_speed_hz = 15000000
 radio.setPayloadSize(32)
 radio.setChannel(0x60)
 
@@ -30,9 +30,20 @@ radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
-radio.openReadingPipe(1, pipes[0])
+radio.openReadingPipe(0, pipes[0])
+radio.openReadingPipe(1, pipes[1])
+radio.openReadingPipe(2, pipes[2])
+radio.openReadingPipe(3, pipes[3])
+radio.openReadingPipe(4, pipes[4])
+radio.openReadingPipe(5, pipes[5])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
+
+WakeUpRetriesCount = 0
+MaxRetriesWakeUp = 5
+NodesUp = 0
+NodeCount = 1
+csvHeading = "Timestamp,"
 
 reportes_path = './reportes/'
 csvfile_path = reportes_path + str(datetime.now().date()) + '.csv'
@@ -61,7 +72,7 @@ START = 1
 #############################################
 
 def receiveData():
-    print("Ready to receive data.")
+    logger.info("Listo para recibir datos")
     radio.startListening()
 
     while not radio.available(0):
@@ -69,41 +80,74 @@ def receiveData():
 
     receivedMessage = []
     radio.read(receivedMessage, radio.getDynamicPayloadSize())
-    print("Received: {}".format(receivedMessage))
-    print("Translating receivedMessage into unicode characters...")
+    logger.info("Recibido: {}".format(receivedMessage))
+    logger.info("Traduciendo el mensaje recibido...")
     string = ""
     for n in receivedMessage:
         # Decode into standard unicode set
         if (n >= 32 and n <= 126):
             string += chr(n)
-    print("Our slave sent us: {}:".format(string))
+    logger.info("El sensor envia: {}:".format(string))
     return string
     radio.stopListening()
-    
+
+
+for pipeCount in range(0, len(pipes)-1):
+    WakeUpRetriesCount = 0
+    radio.openWritingPipe(pipes[pipeCount])
+    while (WakeUpRetriesCount <= MaxRetriesWakeUp):
+        radio.write(list("WAKE_UP"))
+        if radio.isAckPayloadAvailable():
+            NodesUp += 1
+            break
+        else:
+            WakeUpRetriesCount += 1
+            time.sleep(1)
+
+
+
 if (os.path.isfile(str(csvfile_path))):
 	exists_flag = 1
-	print("El archivo ya existe!")
+	logger.warning("El archivo ya existe!")
 else:
 	exists_flag = 0
-	print("Archivo inexistente")
-	
+	logger.warning("Archivo inexistente!")
+    logger.info("Creando archivo nuevo")
+
+while (NodeCount <= NodesUp):
+    if NodeCount == NodesUp:
+        csvHeading = csvHeading+"Sensor"+str(NodeCount)+"\n"
+    else:
+        csvHeading = csvHeading+"Sensor"+str(NodeCount)+","
+    NodeCount += 1
+
 with open(csvfile_path, 'a') as csvfile:
 	if (exists_flag == 0):
-		csvfile.write("timestamp,sensor1\n")
+		csvfile.write(csvHeading)
+    for pipeCount in range(0, len(pipes)-1):
+        radio.openWritingPipe(pipes[pipeCount])
+    while (WakeUpRetriesCount <= MaxRetriesWakeUp):
+        radio.write(list("WAKE_UP"))
+        if radio.isAckPayloadAvailable():
+            NodesUp += 1
+            break
+        else:
+            WakeUpRetriesCount += 1
+            time.sleep(1)
 	while(START):
 		command = "GET_DATA"
 		message = list(command)
 		radio.write(message)
-		print("El mensaje enviado fue {} ".format(command) + "{}".format(message))
+		logger.info("El mensaje enviado fue {} ".format(command) + "{}".format(message))
 
 		# Check if it returned ackPL
 		if radio.isAckPayloadAvailable():
 			returnedPL = []
 			radio.read(returnedPL, radio.getDynamicPayloadSize())
-			print("Los datos recibidos son: {} ".format(returnedPL))
+			logger.info("Los datos recibidos son: {} ".format(returnedPL))
 			message = receiveData()
 			csvfile.write("{0},{1}\n".format(str(datetime.now()),str(message)))
 			#START = 0
 		else:
-			print("No se recibieron datos")
-		sleep(1/33)
+			logger.error("No se recibieron datos")
+		sleep(1/10)
