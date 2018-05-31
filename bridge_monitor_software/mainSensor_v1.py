@@ -4,6 +4,8 @@ import time
 import spidev
 import logging
 import Adafruit_ADS1x15
+import csv
+import os
 
 ###########################################
 ##               Init Sequence           ##
@@ -34,6 +36,9 @@ radio.printDetails()
 radio.startListening()
 
 unique_ID = "1_"
+
+reportes_path = './reportes/'
+csvfile_path = reportes_path + str(datetime.now().date()) + '.csv'
 
 ################# ADC Setup #################
 adc_input = Adafruit_ADS1x15.ADS1115()

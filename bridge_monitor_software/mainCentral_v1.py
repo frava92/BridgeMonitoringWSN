@@ -91,8 +91,6 @@ def receiveData():
     return string
     radio.stopListening()
 
-<<<<<<< HEAD
-
 for pipeCount in range(0, len(pipes)-1):
     WakeUpRetriesCount = 0
     radio.openWritingPipe(pipes[pipeCount])
@@ -105,10 +103,6 @@ for pipeCount in range(0, len(pipes)-1):
             WakeUpRetriesCount += 1
             time.sleep(1)
 
-
-
-=======
->>>>>>> 407850e35a5369d63d6580d9e30e8c3e7c7598f0
 if (os.path.isfile(str(csvfile_path))):
 	exists_flag = 1
 	logger.warning("El archivo ya existe!")
