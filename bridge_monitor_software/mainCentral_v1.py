@@ -14,7 +14,7 @@ from time import sleep, strftime, time
 ###########################################
 
 GPIO.setmode(GPIO.BCM)
-pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
+pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2], [0xC3], [0xC4], [0xC5], [0xC6]]
 
 spi = spidev.SpiDev()
 
@@ -30,9 +30,20 @@ radio.setAutoAck(True)
 radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
-radio.openReadingPipe(1, pipes[0])
+radio.openReadingPipe(0, pipes[0])
+radio.openReadingPipe(1, pipes[1])
+radio.openReadingPipe(2, pipes[2])
+radio.openReadingPipe(3, pipes[3])
+radio.openReadingPipe(4, pipes[4])
+radio.openReadingPipe(5, pipes[5])
 radio.openWritingPipe(pipes[1])
 radio.printDetails()
+
+WakeUpRetriesCount = 0
+MaxRetriesWakeUp = 5
+NodesUp = 0
+NodeCount = 1
+csvHeading = "Timestamp,"
 
 reportes_path = './reportes/'
 csvfile_path = reportes_path + str(datetime.now().date()) + '.csv'
@@ -80,6 +91,24 @@ def receiveData():
     return string
     radio.stopListening()
 
+<<<<<<< HEAD
+
+for pipeCount in range(0, len(pipes)-1):
+    WakeUpRetriesCount = 0
+    radio.openWritingPipe(pipes[pipeCount])
+    while (WakeUpRetriesCount <= MaxRetriesWakeUp):
+        radio.write(list("WAKE_UP"))
+        if radio.isAckPayloadAvailable():
+            NodesUp += 1
+            break
+        else:
+            WakeUpRetriesCount += 1
+            time.sleep(1)
+
+
+
+=======
+>>>>>>> 407850e35a5369d63d6580d9e30e8c3e7c7598f0
 if (os.path.isfile(str(csvfile_path))):
 	exists_flag = 1
 	logger.warning("El archivo ya existe!")
@@ -88,9 +117,29 @@ else:
 	logger.warning("Archivo inexistente!")
     logger.info("Creando archivo nuevo")
 
+<<<<<<< HEAD
+while (NodeCount <= NodesUp):
+    if NodeCount == NodesUp:
+        csvHeading = csvHeading+"Sensor"+str(NodeCount)+"\n"
+    else:
+        csvHeading = csvHeading+"Sensor"+str(NodeCount)+","
+    NodeCount += 1
+
+=======
+>>>>>>> 407850e35a5369d63d6580d9e30e8c3e7c7598f0
 with open(csvfile_path, 'a') as csvfile:
 	if (exists_flag == 0):
-		csvfile.write("timestamp,sensor1\n")
+		csvfile.write(csvHeading)
+    for pipeCount in range(0, len(pipes)-1):
+        radio.openWritingPipe(pipes[pipeCount])
+    while (WakeUpRetriesCount <= MaxRetriesWakeUp):
+        radio.write(list("WAKE_UP"))
+        if radio.isAckPayloadAvailable():
+            NodesUp += 1
+            break
+        else:
+            WakeUpRetriesCount += 1
+            time.sleep(1)
 	while(START):
 		command = "GET_DATA"
 		message = list(command)

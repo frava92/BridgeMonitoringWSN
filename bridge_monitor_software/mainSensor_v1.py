@@ -11,7 +11,7 @@ import Adafruit_ADS1x15
 
 ############### Radio Setup ###############
 GPIO.setmode(GPIO.BCM)
-pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2]]
+pipes = [[0xe7, 0xe7, 0xe7, 0xe7, 0xe7], [0xc2, 0xc2, 0xc2, 0xc2, 0xc2], [0xC3], [0xC4], [0xC5], [0xC6]]
 
 spi = spidev.SpiDev()
 
@@ -28,11 +28,12 @@ radio.enableDynamicPayloads()
 radio.enableAckPayload()
 
 radio.openWritingPipe(pipes[0])
-radio.openReadingPipe(1, pipes[1])
+radio.openReadingPipe(1, pipes[0])
+
 radio.printDetails()
 radio.startListening()
 
-receiver_ID = "1_"
+unique_ID = "1_"
 
 ################# ADC Setup #################
 adc_input = Adafruit_ADS1x15.ADS1115()
