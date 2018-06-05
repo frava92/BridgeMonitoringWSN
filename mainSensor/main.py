@@ -54,9 +54,9 @@ def sendData(ID, value):
     radio.stopListening()
     time.sleep(0.25)
     message = list(ID) + list(value)
-    logger.info("Iniciando envio de datos.")
+    print("Iniciando envio de datos.")
     radio.write(message)
-    logger.info("Datos enviados")
+    print("Datos enviados")
     radio.startListening()
 
 def main():
